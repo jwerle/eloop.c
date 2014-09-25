@@ -2,15 +2,6 @@
 #include <stdlib.h>
 #include "eloop.h"
 
-int
-el_init (void) {
-  if (NULL == EL_DEFAULT_LOOP) {
-    EL_DEFAULT_LOOP = el_alloc();
-  }
-  if (NULL == EL_DEFAULT_LOOP) { return 1; }
-  return 0;
-}
-
 el_t *
 el_alloc (void) {
   el_t *self = (el_t *) malloc(sizeof(el_t));
@@ -21,7 +12,13 @@ el_alloc (void) {
 
 void
 el_free (el_t *self) {
-  if (NULL != self) { free(self); }
+  if (NULL == self) { return; }
+  el_work_t *work = NULL;
+  while (self->length) {
+    work = self->work[self->length--];
+    el_work_destroy(work);
+  }
+  free(self);
 }
 
 size_t
@@ -85,7 +82,6 @@ el_run (el_t *self) {
   if (NULL == self) { return 1; }
   while (1) {
     status = el_dequeue(self);
-    
     if (-1 == status) {
       // @TODO - handle with error
       return 1;
