@@ -1,0 +1,9 @@
+{
+  "name": "eloop",
+  "version": "0.0.1",
+  "repo": "jwerle/eloop.c",
+  "description": "Simple single threaded event loop API",
+  "keywords": ["event", "loop", "api"],
+  "src": ["eloop.h", "eloop.c"]
+}
+
